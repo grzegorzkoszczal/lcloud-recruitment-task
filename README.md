@@ -23,3 +23,14 @@ You have access to S3 bucket named “developer-task”, but limited to contents
 If you don't have practices with AWS, you have additional 120min for reading AWS documentation.
 
 ### 3*. If you have more free time and feel that you can improve your code, you can work more and push code to the same repo with your improvement. (60min)
+
+## How to use Python CLI
+
+### Upload file command syntax
+
+    python3 main.py upload-file --upload-file /home/username/path/file.ext --s3-key file.ext
+
+### List all files command syntax
+
+    python3 main.py list-all-files --list-all
+
