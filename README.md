@@ -34,3 +34,10 @@ If you don't have practices with AWS, you have additional 120min for reading AWS
 
     python3 main.py list-all-files --list-all
 
+### List files by provided regex
+
+    python3 main.py list-files-by-regex --regex <provided_regex>
+
+### Delete files by provided regex
+
+    python3 main.py delete-files-by-regex --regex <provided_regex>

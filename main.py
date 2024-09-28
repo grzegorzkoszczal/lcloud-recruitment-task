@@ -47,12 +47,43 @@ def list_all_files(list_all):
 @click.command()
 @click.option('--regex', required=True, help="Regex pattern to filter files in the S3 bucket.")
 def list_files_by_regex(regex):
-    pass
+    try:
+        response = s3_client.list_objects_v2(Bucket=BUCKET_NAME, Prefix=BUCKET_PREFIX)
+        if 'Contents' in response:
+            pattern = re.compile(regex)
+            matched = False
+            for item in response['Contents']:
+                if pattern.search(item['Key']):
+                    print(item['Key'])
+                    matched = True
+            if not matched:
+                print("No file match the provided regex!")
+        else:
+            print("No files found.")
+    except (NoCredentialsError, PartialCredentialsError) as e:
+        print(f"Credentials error: {str(e)}")
 
 @click.command()
 @click.option('--regex', required=True, help="Regex pattern to filter and delete files in the S3 bucket.")
 def delete_files_by_regex(regex):
-    pass
+    try:
+        response = s3_client.list_objects_v2(Bucket=BUCKET_NAME, Prefix=BUCKET_PREFIX)
+        if 'Contents' in response:
+            pattern = re.compile(regex)
+            keys_to_delete = [item['Key'] for item in response['Contents'] if pattern.search(item['Key'])]
+            
+            if keys_to_delete:
+                delete_response = s3_client.delete_objects(
+                    Bucket=BUCKET_NAME,
+                    Delete={'Objects': [{'Key': key} for key in keys_to_delete]}
+                )
+                print(f"Deleted files: {keys_to_delete}")
+            else:
+                print("No matching files to delete.")
+        else:
+            print("No files found.")
+    except (NoCredentialsError, PartialCredentialsError) as e:
+        print(f"Credentials error: {str(e)}")
 
 @click.group()
 def cli():
