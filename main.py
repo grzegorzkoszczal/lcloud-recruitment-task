@@ -33,7 +33,16 @@ def upload_file(upload_file, s3_key):
 @click.command()
 @click.option('--list-all', is_flag=True, help="List all files in the 'a-wing' prefix of the bucket.")
 def list_all_files(list_all):
-    pass
+    if list_all:
+        try:
+            response = s3_client.list_objects_v2(Bucket=BUCKET_NAME, Prefix=BUCKET_PREFIX)
+            if 'Contents' in response:
+                for item in response['Contents']:
+                    print(item['Key'])
+            else:
+                print("No files found.")
+        except (NoCredentialsError, PartialCredentialsError) as e:
+            print(f"Credentials error: {str(e)}")
 
 @click.command()
 @click.option('--regex', required=True, help="Regex pattern to filter files in the S3 bucket.")
