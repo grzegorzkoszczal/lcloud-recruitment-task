@@ -6,6 +6,19 @@ from botocore.config import Config
 from botocore.exceptions import NoCredentialsError, PartialCredentialsError
 from dotenv import load_dotenv
 
+"""
+    Note to self: In order to use AWS S3 Bucket storage, do the following:
+        1. Create an AWS root account
+        2. Create S3 Bucket resource
+        3. Create a user account using IAM resource
+        4. Give the user permissions to use S3 Bucket storage
+        5. Get AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY and store them in .env file
+        6. Test the working Python CLI on AWS account in internet browser
+    Troubleshooting:
+        1. In case of "permission denied" error, check again carefully the
+           user's permission
+"""
+
 load_dotenv()
 
 s3_client = boto3.client(
@@ -18,7 +31,6 @@ s3_client = boto3.client(
 BUCKET_NAME = os.getenv('BUCKET_NAME')
 BUCKET_PREFIX = os.getenv('BUCKET_PREFIX')
 
-# Upload a local file to the S3 bucket under the defined location in the prefix
 @click.command()
 @click.option('--upload-file', type=click.Path(exists=True), help="Upload a local file to the 'a-wing' directory in S3.")
 @click.option('--s3-key', required=True, help="The destination key (path) in S3.")
